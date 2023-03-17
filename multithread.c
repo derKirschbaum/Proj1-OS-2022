@@ -35,7 +35,7 @@ int main(int argc, char* argv[]){
         "Invalid arguments\n# of readers must be from 1 - %d",MAX_READER);
         exit(-1);
     }
-    if(fopen(argv[3],"r")==NULL){
+    if(fopen(argv[3],"r")==NULL || fopen(argv[4],"r")==NULL)){
         fprintf(stderr,
         "Unable to open file");
         exit(-1);
