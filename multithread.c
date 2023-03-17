@@ -6,6 +6,9 @@
 #define MAX_READER 10
 #define MAX_INTEGER 100000
 
+pthread_mutex_t mutex
+
+
 int main(int argc, char* argv[]){
 
     // Check input arguments
@@ -31,7 +34,11 @@ int main(int argc, char* argv[]){
         "Invalid arguments\n# of readers must be from 1 - %d",MAX_READER);
         exit(-1);
     }
-                
+    if(fopen(argv[3],"r")==NULL){
+        fprintf(stderr,
+        "Unable to open file");
+        exit(-1);
+    }
     //-----------------------------------------------
     if(atoi(argv[6]) < 1 || MAX_INTEGER < atoi(argv[6])){
         fprintf(stderr,
@@ -41,9 +48,11 @@ int main(int argc, char* argv[]){
 
     int num_writers =atoi(argv[1]);
     int num_readers =atoi(argv[2]);
-    
+    FILE *fp = fopen(argv[3],"r");
     int seed =atoi(argv[5]);
     int N =atoi(argv[6]);
+    
+    
     
 
     return 0;
