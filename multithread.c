@@ -8,7 +8,7 @@
 #define MAX_INTEGER 100000
 
 pthread_mutex_t mutex;
-
+char  line[MAX_INTEGER];
 
 int main(int argc, char* argv[]){
 
@@ -40,6 +40,15 @@ int main(int argc, char* argv[]){
         "Unable to open file");
         exit(-1);
     }
+    while(fgets(line, sizeof(line), fopen(argv[3],"r"))!=NULL){
+        int dec = atoi(line);
+        if(dec < 1 || 1000 < dec){
+           fprintf(stderr,
+           "Invalid arguments\nEach integer must be from 1 - 1000");
+           exit(-1);
+        }
+    }
+
     //-----------------------------------------------
     if(atoi(argv[6]) < 1 || MAX_INTEGER < atoi(argv[6])){
         fprintf(stderr,
