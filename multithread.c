@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
     {
         //Print to stderr (Standard Error)
         fprintf(stderr,
-        "Invalid arguments\n\nUsage: ./multithread <# of writers> <# of readers> <input> <output> <seed> <N>);
+        "Invalid arguments\n\nUsage: ./multithread <# of writers> <# of readers> <input> <output> <seed> <N>");
         exit(-1);
     }
     if(atoi(argv[1]) < 1 || MAX_WRITER < atoi(argv[1])){
