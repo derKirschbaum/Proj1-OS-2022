@@ -61,7 +61,7 @@ int main(int argc, char* argv[]){
 
     int num_writers =atoi(argv[1]);
     int num_readers =atoi(argv[2]);
-  //FILE *in  =fopen(argv[3],"r"); just remiding
+  //FILE *in  =fopen(argv[3],"r"); just reminding
     int seed =atoi(argv[5]);
     int N =atoi(argv[6]);
     exit(0);
