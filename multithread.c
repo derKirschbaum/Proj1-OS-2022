@@ -22,7 +22,7 @@ int main(int argc, char* argv[]){
     {
         //Print to stderr (Standard Error)
         fprintf(stderr,
-        "Invalid arguments\nUsage: ./multithread <# of writers> <# of readers> <input> <output> <see>
+        "Invalid arguments\nUsage: ./multithread <# of writers> <# of readers> <input> <output> <see>"
         exit(-1);
     }
     if(atoi(argv[1]) < 1 || MAX_WRITER < atoi(argv[1])){
