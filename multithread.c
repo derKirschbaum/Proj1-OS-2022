@@ -7,7 +7,7 @@
 #define MAX_READER 10
 #define MAX_INTEGER 100000
 
-pthread_mutex_t mutex
+pthread_mutex_t mutex;
 
 
 int main(int argc, char* argv[]){
