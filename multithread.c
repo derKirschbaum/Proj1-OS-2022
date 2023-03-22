@@ -150,8 +150,8 @@ int main(int argc, char *argv[]) {
   char inputName[100];
   strcpy(inputName, argv[3]); // name of input file that want to import
   char outputName[100];
-  
   strcpy(outputName, argv[4]); // name of output file that expected
+  
   int seed = atoi(argv[5]);  
   int N = atoi(argv[6]);     
   //--------------------------------------------------
@@ -159,5 +159,5 @@ int main(int argc, char *argv[]) {
   srand(seed); // set seed
   start_bufferList(&buff); 
     	
-   exit(0);
+  exit(0);
 }
