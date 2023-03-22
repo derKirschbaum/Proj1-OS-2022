@@ -1,92 +1,104 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <pthread.h>
 #include <semaphore.h>
-#include <unistd.h>
-#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define MAX_WRITER 10
 #define MAX_READER 10
-#define MAX_INTEGER 100000
-#define BUFFER_SIZE 1000
-#define TRUE 1
-struct  buffer {
-  int n;
-  struct buffer *next;
-}buff;
-pthread_mutex_t mutex;
-sem_t full,empty;
-char  line[MAX_INTEGER];
+#define MAX_NUMBER 100000
+#define MAX_INTEGER 1000
+sem_t mutex;
+sem_t write_mutex;
+char line[MAX_INTEGER];
+int sleep_time = 1;
+struct thread {
+  int tid;             // thread ID
+  int amount_Rand; // Amount of random number in each thread
+  FILE *fp;            // file pointer
+};
 
+typedef struct {
+  int *list;  // pointer
+  size_t used; // storage of current used list
+  size_t size; // storage of limited size of list
+} Buffer;
 
-int b_counter; //buffer counter
-pthread_t tid; //Thread ID
-pthread_attr_t attr;//Set of attributes of thread
+Buffer buff; //buffer shared list
 
-//void *writer(void *wno); /* the producer thread */
-void *reader(void *rno); /* the consumer thread */
-
-void initializeData() {
-    /* Create the mutex lock */
-    pthread_mutex_init(&mutex, NULL);
-    /* Create the full semaphore and initialize to 0 */
-    sem_init(&full, 0, 0);
-    /* Create the empty semaphore and initialize to BUFFER_SIZE */
-    sem_init(&empty, 0, MAX_INTEGER);
-    /* Get the default attributes */
-    pthread_attr_init(&attr);
-    /* init buffer */
-    b_counter = 0;
-}
-/* Add an item to the buffer */
-void insert_item(struct buffer **item,int fec) {
-        struct buffer *newItem = (struct buffer *) malloc (sizeof (struct buffer));
-	newItem->n =fec;
-	newItem->next = *item;
-	*item =newItem;
-}
-/* Remove an item from the buffer */
-void remove_item(struct buffer **item, int kek) {
-  // 
-	struct buffer *temp = *item;
-	if(*item ==NULL){
-	  return;
-	}
-  /* When the buffer is not empty remove the item
-  and decrement the counter */
-	*item =(*item)->next;
-	free(temp);
+void start_bufferList(Buffer *fec){
+  fec->list = malloc(sizeof(int));
+  fec->used =0;
+  fec->size =1;
 }
 
-/* Writer Thread (drafted)*/
-void *writer(void *wno, FILE *fir) {
-  long tid;
-  tid=(long) wno;
-
-  while(TRUE) {
-  // ge
-    
-  /* acquire the empty lock */
-  sem_wait(&empty);
-  /* acquire the mutex lock */
-  pthread_mutex_lock(&mutex);
-    while(fgets(line, sizeof(line), fir)!=NULL){
-
-    	int im  =  atoi(line);
-	insert_item(&buff,im);
-     }
- 
-
-   /* release the mutex lock */
-   pthread_mutex_unlock(&mutex);
-   /* signal full */
-   sem_post(&full);
-   printf("Writer %ld done",tid);
- }
+void insert_item(Buffer *fec, int item) {
+  if (fec->used == fec->size) {
+    fec->size *= 2;
+    fec->list = realloc(fec->list, fec->size * sizeof(int));
+  }
+  fec->list[fec->used++] =item;
 }
+
+/*---------------------------------------------------*/
+
+void *writer(void *args) {
+  struct thread *arg =
+      (struct thread *)args; // change type of args -> struct thread
+  int id =arg->tid;            // assign to argument of thread id
+  FILE *f =arg->fp;            // point to argument of file fp
+  int fileRead;
+
+  while (EOF != fscanf(f, " %d", &fileRead)) {
+    sem_wait(&write_mutex);
+    insert_item(&buff, fileRead);
+    sem_post(&write_mutex);
+
+    sleep(sleep_time);
+  }
+  printf("WRITER %d DONE\n", id);
+}
+
+void *reader(void *args) { 
+  struct thread *arg = (struct thread *)args;     // changing from args to thread
+  int id =arg->tid;                
+  FILE *f =arg->fp;                
+  int limit =arg->amount_Rand; 
+  int num_ready =1;
+  int internalLimit =0; // for counting loop until reaching the amount of random numbers
+
+  while (internalLimit < limit) {
+    /*
+    */
+    if (buff.list[internalLimit] != NULL) {
+      sem_wait(&mutex);
+      num_ready--;
+      if (num_ready == 0) { sem_wait(&write_mutex); }// thread is not ready
+      sem_post(&mutex);
+      
+      /*---------------------*/
+      char str[30];
+      sprintf(str, "%d\n",
+              buff.list[internalLimit]);  //assign 
+                                          
+      fputs(str, f);                      // put value in str into *f
+     
+      sem_wait(&mutex);
+      num_ready++; //
+      if (num_ready == 1) { sem_post(&write_mutex); }// thread is ready
+      sem_post(&mutex);
+      internalLimit++; 
+      
+      sleep(sleep_time);
+    }
+  }
+  printf("READER %d DONE\n", id);
+}
+/*-----------------------------------*/
 
 int main(int argc, char *argv[]) {
-    // Check input arguments
+
+  // Check input arguments
     // argc = # number of argument
     // argv = array of argument
     // !! default value of argc is 1, therefore we need to check for 7 args
@@ -110,32 +122,42 @@ int main(int argc, char *argv[]) {
         exit(-1);
     }
     FILE *in  =fopen(argv[3],"r");
-    FILE *out =fopen(argv[4],"r");
-    if(! in  || ! out){ /* (! file) = (file ==NULL) */ 
+    
+    if(! in ){ /* (! file) = (file ==NULL) */ 
         fprintf(stderr,
         "Unable to open file\n");
         exit(-1);
     }
     while(fgets(line, sizeof(line), in)!=NULL){
     	int dec = atoi(line);
-	if(dec < 1 || 1000 < dec){
+	if(dec < 1 || MAX_INTEGER < dec){
 	   fprintf(stderr,
        	   "Invalid arguments\nEach integer must be from 1 - 1000\n");
        	   exit(-1);
 	}
     }
     //-----------------------------------------------
-    if(atoi(argv[6]) < 1 || MAX_INTEGER < atoi(argv[6])){
+    if(atoi(argv[6]) < 1 || MAX_NUMBER < atoi(argv[6])){
         fprintf(stderr,
-        "Invalid arguments\nAmount of integers must be from 1 - %d\n",MAX_INTEGER);
+        "Invalid arguments\nAmount of integers must be from 1 - %d\n",MAX_NUMBER);
         exit(-1);
     }
 
-    int num_writers =atoi(argv[1]);
-    int num_readers =atoi(argv[2]);
-  //FILE *in  =fopen(argv[3],"r"); just reminding
-    int seed =atoi(argv[5]);
-    int N =atoi(argv[6]);
+  //---------------Assigned argument-------------------
+  int numWrit = atoi(argv[1]); 
+  int numRead = atoi(argv[2]); 
+                            
+  char inputName[100];
+  strcpy(inputName, argv[3]); // name of input file that want to import
+  char outputName[100];
+  
+  strcpy(outputName, argv[4]); // name of output file that expected
+  int seed = atoi(argv[5]);  
+  int N = atoi(argv[6]);     
+  //--------------------------------------------------
+
+  srand(seed); // set seed
+  start_bufferList(&buff); 
     	
-    exit(0);
+   exit(0);
 }
