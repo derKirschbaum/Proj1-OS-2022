@@ -63,14 +63,14 @@ void *reader(void *args) {
   struct thread *arg = (struct thread *)args;     // changing from args to thread
   int id =arg->tid;                
   FILE *f =arg->fp;                
-  int limit =arg->amount_Rand; 
+  int size =arg->amount_Rand; 
   int num_ready =1;
-  int internalLimit =0; // for counting loop until reaching the amount of random numbers
+  int counter =0; // for counting loop until reaching the amount of random numbers
 
-  while (internalLimit < limit) {
+  while (counter < size) {
     /*
     */
-    if (buff.list[internalLimit] != NULL) {
+    if (buff.list[counter] != NULL) {
       sem_wait(&mutex);
       num_ready--;
       if (num_ready == 0) { sem_wait(&write_mutex); }// thread is not ready
@@ -79,7 +79,7 @@ void *reader(void *args) {
       /*---------------------*/
       char str[30];
       sprintf(str, "%d\n",
-              buff.list[internalLimit]);  //assign 
+              buff.list[counter]);  
                                           
       fputs(str, f);                      // put value in str into *f
      
@@ -87,7 +87,7 @@ void *reader(void *args) {
       num_ready++; //
       if (num_ready == 1) { sem_post(&write_mutex); }// thread is ready
       sem_post(&mutex);
-      internalLimit++; 
+      counter++; 
       
       sleep(sleep_time);
     }
