@@ -17,7 +17,7 @@ Each line is an integer ***X*** where ***0 < X <= 1,000***
 
 ## Usage
 - Clone this project
-- For __Windows__ run `gcc ./multithread.c -o multithread.exe`
+- For __Windows__ run `gcc ./multithread.c -o multithread.exe -lpthread`
   - then `./multithread.exe <#of writers> <#of readers> <input> <output> <seed> <N>`
-- For __Linux__ run `$ gcc ./multithread.c -o multithread`
+- For __Linux__ run `$ gcc ./multithread.c -o multithread -lpthread`
   - then `./multithread <#of writers> <#of readers> <input> <output> <seed> <N>`
