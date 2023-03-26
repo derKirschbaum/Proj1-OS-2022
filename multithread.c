@@ -32,7 +32,7 @@ void start_bufferList(Buffer *fec){
   fec->size =1;
 }
 
-void insert_item(Buffer *fec, int item) {
+void insert_item(Buffer *fec, int item) { //insert item
   if (fec->used == fec->size) {
     fec->size *= 2;
     fec->list = realloc(fec->list, fec->size * sizeof(int));
@@ -56,7 +56,7 @@ void *writer(void *args) {
 
     sleep(sleep_time);
   }
-  printf("WRITER %d DONE\n", id);
+  printf("WRITER %d DONE\n", id); // end of writer
 }
 
 void *reader(void *args) { 
@@ -92,8 +92,9 @@ void *reader(void *args) {
       sleep(sleep_time);
     }
   }
-  printf("READER %d DONE\n", id);
+  printf("READER %d DONE\n", id); //end of reader
 }
+
 /*-----------------------------------*/
 
 int main(int argc, char *argv[]) {
