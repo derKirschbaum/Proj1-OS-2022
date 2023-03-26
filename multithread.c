@@ -68,8 +68,7 @@ void *reader(void *args) {
   int counter =0; // for counting loop until reaching the amount of random numbers
 
   while (counter < size) {
-    /*
-    */
+    /* the amount is still within the size*/
     if (buff.list[counter] != NULL) {
       sem_wait(&mutex);
       num_ready--;
