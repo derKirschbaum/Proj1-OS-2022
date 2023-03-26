@@ -35,5 +35,13 @@ Each line is an integer ***X*** where ***0 < X <= 1,000***
 9. The output will be copied from argv[4] which is array no.5 of the argument.
 // no.9 simply copied the name of the output
 10. the program will set seet before starting the buffer.
-11. destroy semaphores
-12. program exit
+11. read file pointer
+12. read the file
+13. assign numero ID
+14. apply names from input
+15. create empty file for writing
+16. random amount of integer in the list
+17. starting semaphores
+18. initializing semaphores
+19. destroy semaphores and mutex.
+20. program exit.
