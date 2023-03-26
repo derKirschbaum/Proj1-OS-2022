@@ -35,4 +35,5 @@ Each line is an integer ***X*** where ***0 < X <= 1,000***
 9. The output will be copied from argv[4] which is array no.5 of the argument.
 // no.9 simply copied the name of the output
 10. the program will set seet before starting the buffer.
-11. program exit
+11. destroy semaphores
+12. program exit
