@@ -22,7 +22,7 @@ Each line is an integer ***X*** where ***0 < X <= 1,000***
 - For __Linux__ run `$ gcc ./multithread.c -o multithread`
   - then `./multithread <#of writers> <#of readers> <input> <output> <seed> <N>`
 
-## Tutorial
+## Process of the program
 1. The program will check the input at the beginning of the main.
 2. The program will check if the numbe of the process is not equal to 7 or the program will exit for the standard error.
 3. The program will check if the number of the array must be more than 1 otherwise it is not valid and exit.
