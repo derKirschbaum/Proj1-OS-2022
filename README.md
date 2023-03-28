@@ -6,9 +6,9 @@ For this project, we have to use the multithread programming, concurrency, and s
 the multithread programs. Both the readers and the writers will access a shared list. Per the reader-and-writer problem, you will execute the writers to update the list, and the readers to read the list.
 
 ## Collaborators
-- 6488069 Chattawat Riyong [Github](https://github.com/derKirschbaum)
-- 6488112 Napatara Wangthongtana [Github](https://github.com/PattyaWang)
-- 6488185 Sanphet Surakool [Github](https://github.com/MonikaElisch)
+- 6488069 Chattawat Riyong [Github](https://github.com/derKirschbaum) - host shared github project foulder, begin the code, initializing readme.
+- 6488112 Napatara Wangthongtana [Github](https://github.com/PattyaWang) - editing and proofread readme files, checking code runability and finalizing readme.
+- 6488185 Sanphet Surakool [Github](https://github.com/MonikaElisch) - constructing code, research, editing and finalizing the code.
 
 ## Prerequisites
 - GCC
