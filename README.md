@@ -22,7 +22,7 @@ Each line is an integer ***X*** where ***0 < X <= 1,000***
 - For __Linux__ run `$ gcc ./multithread.c -o multithread`
   - then `./multithread <#of writers> <#of readers> <input> <output> <seed> <N>`
  
- ## libraries
+ ## Libraries
  <pthread.h>
  <semaphore.h>
  <stdio.h>
