@@ -21,6 +21,13 @@ Each line is an integer ***X*** where ***0 < X <= 1,000***
   - then `./multithread.exe <#of writers> <#of readers> <input> <output> <seed> <N>`
 - For __Linux__ run `$ gcc ./multithread.c -o multithread`
   - then `./multithread <#of writers> <#of readers> <input> <output> <seed> <N>`
+ 
+ ## libraries
+ <pthread.h>
+ <semaphore.h>
+ <stdio.h>
+ <stdlib.h>
+ <string.h>
 
 ## Process of the program
 1. The program will check the input at the beginning of the main.
