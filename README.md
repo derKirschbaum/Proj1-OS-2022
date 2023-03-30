@@ -48,7 +48,7 @@ Each line is an integer ***X*** where ***0 < X <= 1,000***
 14. apply names from input
 15. create empty file for writing
 16. random amount of integer in the list
-17. starting semaphores
-18. initializing semaphores
-19. destroy semaphores and mutex.
+17. starting mutex
+18. initializing mutex
+19. destroy and mutex.
 20. program exit.
