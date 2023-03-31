@@ -6,7 +6,7 @@ For this project, we have to use the multithread programming, concurrency, and s
 the multithread programs. Both the readers and the writers will access a shared list. Per the reader-and-writer problem, you will execute the writers to update the list, and the readers to read the list.
 
 ## Collaborators
-- 6488069 Chattawat Riyong [Github](https://github.com/derKirschbaum) - host shared github project foulder, begin the code, initializing readme.
+- 6488069 Chattawat Riyong [Github](https://github.com/derKirschbaum) - host shared github project founder, begin the code, initializing readme.
 - 6488112 Napatara Wangthongtana [Github](https://github.com/PattyaWang) - editing and proofread readme files, checking code runability and finalizing readme.
 - 6488185 Sanphet Surakool [Github](https://github.com/MonikaElisch) - constructing code, research, editing, checking runability and finalizing the code.
 
@@ -23,11 +23,11 @@ Each line is an integer ***X*** where ***0 < X <= 1,000***
   - then `./multithread <#of writers> <#of readers> <input> <output> <seed> <N>`
  
  ## Libraries
- <pthread.h>
- <semaphore.h>
- <stdio.h>
- <stdlib.h>
- <string.h>
+ <pthread.h>  
+ <semaphore.h>  
+ <stdio.h>  
+ <stdlib.h>  
+ <string.h>  
 
 ## Process of the program
 1. The program will check the input at the beginning of the main.
