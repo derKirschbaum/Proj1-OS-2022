@@ -3,15 +3,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #define MAX_WRITER 10
 #define MAX_READER 10
 #define MAX_NUMBER 100000
 #define MAX_INTEGER 1000
-sem_t mutex;
-sem_t write_mutex;
+#define SLEEP_TIME 1
+pthread_mutex_t mutex, mutexWrit;
+pthread_cond_t condWrit,cond ;
 char line[MAX_INTEGER];
-int sleep_time = 1;
 struct thread {
   int tid;             // thread ID
   int amount_Rand; // Amount of random number in each thread
@@ -20,8 +21,8 @@ struct thread {
 
 typedef struct {
   int *list;  // pointer
-  size_t used; // storage of current used list
-  size_t size; // storage of limited size of list
+  size_t used; // used list
+  size_t size; // size of list
 } Buffer;
 
 Buffer buff; //buffer shared list
@@ -32,7 +33,7 @@ void start_bufferList(Buffer *fec){
   fec->size =1;
 }
 
-void insert_item(Buffer *fec, int item) { //insert item
+void insert_item(Buffer *fec, int item) {
   if (fec->used == fec->size) {
     fec->size *= 2;
     fec->list = realloc(fec->list, fec->size * sizeof(int));
@@ -50,13 +51,14 @@ void *writer(void *args) {
   int fileRead;
 
   while (EOF != fscanf(f, " %d", &fileRead)) {
-    sem_wait(&write_mutex);
+    pthread_mutex_lock(&mutexWrit);
     insert_item(&buff, fileRead);
-    sem_post(&write_mutex);
-
-    sleep(sleep_time);
+    pthread_mutex_unlock(&mutexWrit);  
+  
+    sleep(rand() %3);
+    //sleep(SLEEP_TIME);
   }
-  printf("WRITER %d DONE\n", id); // end of writer
+  printf("WRITER %d DONE\n", id);
 }
 
 void *reader(void *args) { 
@@ -68,32 +70,28 @@ void *reader(void *args) {
   int counter =0; // for counting loop until reaching the amount of random numbers
 
   while (counter < size) {
-    /* the amount is still within the size*/
-    if (buff.list[counter] != NULL) {
-      sem_wait(&mutex);
-      num_ready--;
-      if (num_ready == 0) { sem_wait(&write_mutex); }// thread is not ready
-      sem_post(&mutex);
+    if  (buff.list[counter] != NULL) { 
+      pthread_mutex_lock(&mutex);
+      //pthread_cond_wait(&condWrit,&mutexWrit); // t
+      pthread_mutex_unlock(&mutex);
       
-      /*---------------------*/
-      char str[30];
+      char str[MAX_INTEGER];
       sprintf(str, "%d\n",
-              buff.list[counter]);  
+              buff.list[counter]);  //assign 
                                           
-      fputs(str, f);                      // put value in str into *f
+      fputs(str, f);  // put value in str into *f
      
-      sem_wait(&mutex);
-      num_ready++; //
-      if (num_ready == 1) { sem_post(&write_mutex); }// thread is ready
-      sem_post(&mutex);
-      counter++; 
+      pthread_mutex_lock(&mutex);
+      //pthread_cond_signal(&condWrit); // thr
+      pthread_mutex_unlock(&mutex);
+      counter++;
       
-      sleep(sleep_time);
+      sleep(rand() %3);
+      //sleep(SLEEP_TIME);
     }
   }
-  printf("READER %d DONE\n", id); //end of reader
+  printf("READER %d DONE\n", id);
 }
-
 /*-----------------------------------*/
 
 int main(int argc, char *argv[]) {
@@ -150,14 +148,63 @@ int main(int argc, char *argv[]) {
   char inputName[100];
   strcpy(inputName, argv[3]); // name of input file that want to import
   char outputName[100];
+  char* endPtr;
   strcpy(outputName, argv[4]); // name of output file that expected
-  
-  int seed = atoi(argv[5]);  
+  unsigned int seed = strtoul(argv[5], &endPtr,10);  
   int N = atoi(argv[6]);     
-  //--------------------------------------------------
+  //---------------------------------------------------
 
   srand(seed); // set seed
   start_bufferList(&buff); 
-    	
-  exit(0);
+
+  /* ---Writer section--- */
+
+  FILE *fop; //read file pointer
+  fop = fopen(inputName, "r"); // reading file
+  struct thread writS[numWrit];
+  for (int i = 0; i < numWrit; i++) {
+    writS[i].tid =  i;  //assign numero ID
+    writS[i].fp  = fop; 
+  }
+  
+
+  /* ---Reader section--- */
+  struct thread readS[numRead];
+  for (int i = 0; i < numRead; i++) {
+    char fName[100]; //size of name of output file 
+    sprintf(fName, "%s_%d.txt", outputName, i); //apply name from input 
+    readS[i].tid = i;                 
+    readS[i].fp = fopen(fName, "w+"); // create empty file for writing
+    readS[i].amount_Rand = rand()%N+1; // random amount of integers on the list
+  }
+
+  /* ---Thread section--- */
+  
+  // starting semaphores
+  pthread_mutex_init(&mutex, NULL);
+  pthread_mutex_init(&mutexWrit, NULL);
+  pthread_cond_init(&condWrit, NULL);
+  
+  // Initializing Threads
+  pthread_t writer_threads[numWrit], reader_threads[numRead] ;
+  for (int i = 0; i < numWrit; i++) {
+    pthread_create(&writer_threads[i], NULL, writer, &writS[i]);
+  }
+  for (int i = 0; i < numRead; i++) {
+    pthread_create(&reader_threads[i], NULL, reader, &readS[i]);
+  }
+ 
+  /*----------------------------------------------*/
+  for (int i = 0; i < numWrit; i++) {
+    pthread_join(writer_threads[i], NULL);
+  }
+  for (int i = 0; i < numRead; i++) {
+    pthread_join(reader_threads[i], NULL);
+  }
+  
+  // Destroy mutex
+  pthread_mutex_destroy(&mutex);
+  pthread_mutex_destroy(&mutexWrit);
+  
+  return 0;
 }
