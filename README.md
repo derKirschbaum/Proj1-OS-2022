@@ -8,7 +8,7 @@ the multithread programs. Both the readers and the writers will access a shared 
 ## Collaborators
 - 6488069 Chattawat Riyong [Github](https://github.com/derKirschbaum) - host shared github project foulder, begin the code, initializing readme.
 - 6488112 Napatara Wangthongtana [Github](https://github.com/PattyaWang) - editing and proofread readme files, checking code runability and finalizing readme.
-- 6488185 Sanphet Surakool [Github](https://github.com/MonikaElisch) - constructing code, research, editing and finalizing the code.
+- 6488185 Sanphet Surakool [Github](https://github.com/MonikaElisch) - constructing code, research, editing, checking runability and finalizing the code.
 
 ## Prerequisites
 - GCC
