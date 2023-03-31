@@ -23,11 +23,11 @@ Each line is an integer ***X*** where ***0 < X <= 1,000***
   - then `./multithread <#of writers> <#of readers> <input> <output> <seed> <N>`
  
  ## Libraries
- <pthread.h>  
- <semaphore.h>  
- <stdio.h>  
- <stdlib.h>  
- <string.h>  
+ - <pthread.h>  
+ - <semaphore.h>  
+ - <stdio.h>  
+ - <stdlib.h>  
+ - <string.h>  
 
 ## Process of the program
 1. The program will check the input at the beginning of the main.
