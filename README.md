@@ -33,26 +33,32 @@ Each line is an integer ***X*** where ***0 < X <= 1,000***
 ## Process of the program
 1. including libraries and functions and define some values
 2. functions and structs for thread, insert item, buffer, start buffer, (pointer) writer, and (pointer) reader
-3. main function
+3. ----main function----
 4. The program will check the input at the beginning of the main.
 5. The program will check if the numbe of the process is not equal to 7 or the program will exit for the standard error.
 6. The program will check that number of writers must be from 1 to max writer
 7. The program will check that number of readers must be from 1 to max reader
 8. The program will check if there is any file, if no file or the file is unable to be opened the program will exit as it could not receive file or input.
-9. program always check if the integer must be always from within 1 - 1000
-10. In this case, we have Max number defined by 100000 however, this could be change. The program will check that the amount of integer must not exceed the MAX_NUMBER
-11. The assigned argument section started with the input name ( this case, the string will be copied from argv[3] "array no. 4 of the argument" )
-// no.8 simply copied the name of the input
-9. The output will be copied from argv[4] which is array no.5 of the argument.
-// no.9 simply copied the name of the output
-10. the program will set seet before starting the buffer.
-11. read file pointer
-12. read the file
-13. assign numero ID
-14. apply names from input
-15. create empty file for writing
-16. random amount of integer in the list
-17. starting mutex
-18. initializing mutex
-19. destroy mutex.
-20. finished.
+9. program always check if the integer must be always from within 1 to Max number that the program defined or it will exit.
+10. ----Assigned arguments----
+11. we assigned some arguments
+12. The assigned argument section started with the input name ( this case, the string will be copied from argv[3])
+13. copied name of input
+14. The output will be copied from argv[4] which is array no.5 of the argument.
+15. copied name of the output file expected
+16. the program will set seed before starting the buffer.
+17. use the start_bufferlist function
+18. ----writer section----
+19. read file pointer
+20. assign numero ID
+21. ----reader section----
+22. thread the argument[2] from assigned argument
+23. //get size of name of the output file
+24. apply name from our input
+25. create empty file for writing
+26. random amounf of integer on the list
+27. ----thread section----
+28. starting mutex
+29. initializing threads
+30. destroy mutex.
+31. finished.
